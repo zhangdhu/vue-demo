@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>List Rendering</title>
+</head>
+
+<body>
+<div id="app">
+    <li v-for="(item, index) in items">
+        {{ index }} - {{ item.message }}
+    </li>
+
+    <li v-for="value, key in object">
+        {{ key }} - {{ value }}
+    </li>
+
+    <li v-for="value, key, index of object">
+        {{ index }}:{{ key }} - {{ value }}
+    </li>
+
+    <!-- 整数迭代 -->
+    <div>
+        <span v-for="n in 10">{{ n }}</span>
+    </div>
+
+    <div id="todo-list-example">
+        <input
+                v-model="newTodoText"
+                v-on:keyup.enter="addNewTodo"
+                placeholder="Add a todo"
+        >
+        <ul>
+            <li
+                    is="todo-item"
+                    v-for="(todo, index) in todos"
+                    v-bind:title="todo"
+                    v-bind:index="index"
+                    :key="index"
+                    v-on:remove="todos.splice(index, 1)"
+            ></li>
+        </ul>
+
+        <!--in 里面的内容可以是原始数据、计算属性、method方法-->
+        <ul>
+            <li
+                    is="todo-item"
+                    v-for="(todo, index) in selectedTodos"
+                    v-bind:title="todo"
+                    v-bind:index="index"
+                    :key="index"
+                    v-on:remove="todos.splice(index, 1)"
+            ></li>
+        </ul>
+    </div>
+</div>
+<script src="http://cdn.bootcss.com/vue/2.0.3/vue.min.js"></script>
+<script type="text/javascript">
+    Vue.component('todo-item', {
+        template: `<li>
+                    {{index}}-{{ title }}
+                    <button v-on:click="$emit('remove')">X</button>
+                   </li>`,
+        props: ['title','index']
+    });
+    var app = new Vue({
+        el: '#app',
+        data: {
+            items: [{
+                message: 'foo'
+            }, {
+                message: 'Bar'
+            }],
+            object: {
+                FirstName: 'John',
+                LastName: 'Doe',
+                Age: 30
+            },
+            newTodoText : '',
+            todos: [
+                    'Do the dishes',
+                    'Take out the trash',
+                    'Mow the lawn'
+            ]
+        },
+        methods: {
+            addNewTodo: function () {
+                this.todos.push(this.newTodoText);
+                this.newTodoText = '';
+            }
+        },
+        computed : {
+            selectedTodos : function () {
+                return this.todos.filter(function (todo) {
+                    return todo.length >= 3;
+                })
+            }
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>form controller</title>
+</head>
+
+<body>
+<div id="app">
+    <div>
+        <input v-model="message" placeholder="edit me">
+        <p>Message is: {{ message }}</p>
+    </div>
+
+    <div>
+        <span>Multiline message is:</span>
+        <p style="white-space: pre">{{ message }}</p>
+        <br>
+        <textarea v-model="message" placeholder="add multiple lines"></textarea>
+    </div>
+
+    <div>
+        <template v-for="item,index in items">
+            <input type="checkbox" :id="'item'+index"
+                   :value="item.value"
+                   v-model="checkedNames">
+            <label :for="'item'+index">{{item.value}}</label>
+        </template>
+        <span>Checked names: {{ checkedNames }}</span>
+    </div>
+
+    <div>
+        <template v-for="item,index in items">
+            <input type="radio" :id="'pick'+index" :value="item.value" v-model="picked">
+            <label :for="'pick'+index">{{item.value}}</label>
+            <br>
+        </template>
+        <span>Picked: {{ picked }}</span>
+    </div>
+
+    <div>
+        <select v-model="selected">
+            <option v-for="item,index in items" :value="{value: index}">
+                {{item.value}}
+            </option>
+        </select>
+        <span>Selected: {{ selected.value }}</span>
+    </div>
+    <div>
+        <!-- 在 "change" 而不是 "input" 事件中更新 -->
+        <!--trim过滤首尾空格-->
+        <input v-model.lazy.trim="message"> <br/>
+        <input v-model.number="age" type="number">{{age}}
+    </div>
+</div>
+<script src="http://cdn.bootcss.com/vue/2.0.3/vue.min.js"></script>
+<script type="text/javascript">
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: '',
+            age: '',
+            checkedNames: [],
+            items: [
+                {value: 'foo'},
+                {value: 'Bar'},
+                {value: 'kkk'},
+            ],
+            picked: '',
+            selected: {value:0},
+        },
+        methods: {
+        },
+        computed: {
+
+        }
+    });
+</script>
+</body>
+
+</html>

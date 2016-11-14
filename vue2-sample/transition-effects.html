@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Transition Effects</title>
+    <link href="https://unpkg.com/animate.css@3.5.1/animate.min.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div id="app">
+    <div><a href="https://daneden.github.io/animate.css/">Animate.css </a></div>
+    <button @click="show = !show">
+        Toggle render
+    </button>
+    <transition
+            enter-active-class="animated rollIn"
+            leave-active-class="animated rollOut"
+    >
+        <p v-if="show">hello</p>
+    </transition>
+
+    <transition
+            enter-active-class="animated shake"
+            leave-active-class="animated hinge"
+    >
+        <p v-if="!show">hello1111</p>
+    </transition>
+</div>
+<script src="http://cdn.bootcss.com/vue/2.0.3/vue.min.js"></script>
+<script type="text/javascript">
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            show: true
+        }
+    });
+</script>
+</body>
+
+</html>

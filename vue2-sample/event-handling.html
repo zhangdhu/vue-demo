@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>event handling</title>
+</head>
+
+<body>
+<div id="app">
+    <button @click="counter += 1">使劲按我啊</button>
+    <p>这个按钮被点击了 {{ counter }} 次。</p>
+
+    <button @click="greet">Greet</button>
+    <button v-on:click="warn('Form cannot be submitted yet.', $event)">Submit</button>
+    <input @keyup.f2="warn" @keyup.enter="warn">
+</div>
+</div>
+<script src="http://cdn.bootcss.com/vue/2.0.3/vue.min.js"></script>
+<script type="text/javascript">
+    // 自定义按按键编码别名，可以使用 v-on:keyup.f2
+    Vue.config.keyCodes.f2 = 113;
+    
+    var app = new Vue({
+        el: '#app',
+        data: {
+            counter: 0,
+        },
+        methods: {
+            greet: function (event) {
+                // `this` is for vue instance
+                console.log('hello' + this.counter + '!');
+                // `event` is the original DOM event
+                console.log(event.target.tagName);
+            },
+            warn: function (message, event) {
+                // 现在我们可以访问原生事件对象
+                if (event) event.preventDefault();
+                alert(message)
+            }
+        },
+        computed: {
+
+        }
+    });
+</script>
+</body>
+
+</html>

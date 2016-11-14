@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Render 函数</title>
+</head>
+
+<body>
+<div id="app">
+    <anchored-heading v-for="n in 6" :level="n">hello h{{n}}</anchored-heading>
+</div>
+<script src="http://cdn.bootcss.com/vue/2.0.3/vue.min.js"></script>
+<script type="text/javascript">
+    Vue.component('anchored-heading', {
+        render: function (createElement) {
+            // @returns {VNode}
+            return createElement(
+                    // {String | Object | Function}
+                    // 一个 HTML 标签，组件设置，或一个函数
+                    // 必须 Return 上述其中一个
+                    'h' + this.level,   // tag name 标签名称
+                    this.$slots.default, // 子组件中的阵列
+                    // {String | Array}
+                    // 子节点(VNodes). 可选项.
+                    [createElement('div', {
+                        props: {
+                            someProp: 'foo'
+                        }
+                    }),'bar']
+            )
+        },
+        props: {
+            level: {
+                type: Number,
+                required: true
+            }
+        }
+    });
+
+    var app = new Vue({
+        el: '#app',
+        data: {}
+    });
+</script>
+</body>
+
+</html>

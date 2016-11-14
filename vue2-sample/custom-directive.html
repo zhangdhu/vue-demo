@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>custom directive</title>
+</head>
+
+<body>
+<div id="app">
+    <div v-demo:hello.a.b="message"></div>
+</div>
+<script src="http://cdn.bootcss.com/vue/2.0.3/vue.min.js"></script>
+<script type="text/javascript">
+
+    Vue.directive('demo', {
+        // el: 指令所绑定的元素，可以用来直接操作 DOM 。
+        // binding: 一个对象，详见下面说明
+        // vnode: Vue 编译生成的虚拟节点，查阅 VNode API 了解更多详情(https://vuefe.cn/api/#VNode接口)
+        // oldVnode: 上一个虚拟节点，仅在 update 和 componentUpdated 钩子中可用。
+        // 除了 el 之外，其它参数都应该是只读的，尽量不要修改他们。如果需要在钩子之间共享数据，建议通过元素的 dataset(https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement/dataset) 来进行。
+
+        // 只调用一次，指令第一次绑定到元素时调用，用这个钩子函数可以定义一个在绑定时执行一次的初始化动作。
+        bind: function (el, binding, v_node, old_v_node) {
+            var s = JSON.stringify;
+            el.innerHTML =
+                    // binding说明
+                    // name: 指令名，不包括 v- 前缀。
+                    // value: 指令的绑定值， 例如： v-my-directive="1 + 1", value 的值是 2。
+                    // oldValue: 指令绑定的前一个值，仅在 update 和 componentUpdated 钩子中可用。无论值是否改变都可用。
+                    // expression: 绑定值的字符串形式。 例如 v-my-directive="1 + 1" ， expression 的值是 "1 + 1"。
+                    // arg: 传给指令的参数。例如 v-my-directive:foo， arg 的值是 "foo"。
+                    // modifiers: 一个包含修饰符的对象。 例如： v-my-directive.foo.bar, 修饰符对象 modifiers 的值是 { foo: true, bar: true }。
+                    `name:  ${s(binding.name)} <br>
+                    value:  ${s(binding.value)} <br>
+                    old value: ${s(binding.oldValue)} <br>
+                    expression:  ${s(binding.expression)} <br>
+                    argument:  ${s(binding.arg)} <br>
+                    modifiers:  ${s(binding.modifiers)} <br>
+                    vnode keys:  ${Object.keys(v_node).join(', ')} <br>
+                    old vnode keys:  ${Object.keys(old_v_node).join(', ')}`;
+            console.log(binding);
+        },
+        inserted: function (el) {
+            // 被绑定元素插入父节点时调用（父节点存在即可调用，不必存在于 document 中）。
+
+            // 聚焦元素
+            el.focus();
+        },
+        update : function (el, binding) {
+            // 被绑定元素所在的模板更新时调用，而不论绑定值是否变化。通过比较更新前后的绑定值，可以忽略不必要的模板更新（详细的钩子函数参数见下）。
+            console.log('update: ');
+            console.log(binding.value, binding.oldValue);
+        },
+        componentUpdated : function (el, binding) {
+            // 被绑定元素所在模板完成一次更新周期时调用。
+            console.log('componentUpdated: ');
+            console.log(binding.value, binding.oldValue);
+        },
+        unbind : function () {
+            // 只调用一次， 指令与元素解绑时调用。
+        }
+    });
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: {value:'hello!',text: '你好!'}
+        }
+    });
+</script>
+</body>
+
+</html>

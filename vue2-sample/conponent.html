@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>component</title>
+</head>
+
+<body>
+<div id="app">
+    <p>{{ total }}</p>
+    <button-counter v-on:increment-parent="incrementTotal" ref="button_counter1"></button-counter>
+    <button-counter v-on:increment-parent="incrementTotal"></button-counter>
+
+    <div id="v-model-example">
+        <p>{{ message }}</p>
+        <my-input
+                label="Message"
+                v-model="message"
+        ></my-input>
+    </div>
+
+    <keep-alive>
+        <!--多个组件可以使用同一个挂载点，然后动态地在它们之间切换。使用保留的 <component> 元素，动态地绑定到它的 is 特性-->
+        <component v-bind:is="currentView" label="Message" v-model="message" ref="dynamic_component">
+            <!-- 组件在 vm.currentview 变化时改变！ -->
+        </component>
+    </keep-alive>
+    <br>
+    <button @click="changeComponent('button-counter')">select button counter</button>
+    <br>
+    <button @click="changeComponent('my-input')">select my input</button>
+    <br>
+    <button @click="changeComponent('ct')">select ct</button>
+    <br>
+</div>
+<script src="http://cdn.bootcss.com/vue/2.0.3/vue.min.js"></script>
+<script type="text/javascript">
+
+    Vue.component('ct', {
+        template: '<p>hello</p>',
+        data: function () {
+        },
+        methods: {},
+        activated: function () {
+            console.log('ct activated');
+        },
+        deactivated: function () {
+            console.log('ct deactivated');
+        }
+    });
+
+    Vue.component('button-counter', {
+        template: '<button v-on:click="incrementChild">{{ counter }}</button>',
+        data: function () {
+            return {
+                counter: 0
+            }
+        },
+        methods: {
+            incrementChild: function () {
+                this.counter += 1;
+//                emit方法不可以出现大写命名
+                this.$emit('increment-parent');
+            }
+        },
+        activated: function () {
+            console.log('button counter activated');
+        },
+        deactivated: function () {
+            console.log('button counter deactivated');
+        }
+    });
+
+    // 自定义带label的输入框
+    Vue.component('my-input', {
+        template: `
+            <div class="form-group">
+              <label :for="randomId">{{ label }}:</label>
+              <input :id="randomId" :value="value" @input="onInput">
+            </div>`,
+        props: ['value', 'label'],
+        data: function () {
+            return {
+                randomId: 'input-' + Math.random()
+            }
+        },
+        methods: {
+            onInput: function (event) {
+                this.$emit('input', event.target.value)
+            }
+        },
+        activated: function () {
+            console.log('my input activated');
+        },
+        deactivated: function () {
+            console.log('my input deactivated');
+        }
+    });
+
+//    工厂函数接收一个 resolve 回调，在收到从服务器下载的组件定义时调用。也可以调用 reject(reason) 指示加载失败
+    Vue.component('async-example', function (resolve, reject) {
+        setTimeout(function () {
+            resolve({
+                template: '<div>I am async!</div>'
+            });
+            reject();
+        }, 1000);
+    });
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'hello',
+            total: 0,
+//            动态组件
+            currentView: 'button-counter'
+        },
+        methods: {
+            incrementTotal: function () {
+                this.total += 1;
+            },
+            changeComponent: function (view) {
+                this.currentView = view;
+            }
+        },
+        computed: {}
+    });
+    console.log(app.$refs);
+</script>
+</body>
+
+</html>

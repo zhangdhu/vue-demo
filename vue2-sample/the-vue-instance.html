@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>The Vue Instance</title>
+</head>
+<div id="app">
+    <span v-once>{{ msg }}</span>
+    <span>{{ msg }}</span>
+	<div v-html="rawHtml"></div>
+	<button :disabled="btn_dis">click me btn</button>
+	<div v-bind:id="'list-' + id">{{ msg | filterA('arg1', id) }}</div>
+</div>
+
+<body>
+    <script src="http://cdn.bootcss.com/vue/2.0.3/vue.min.js"></script>
+    <script type="text/javascript">
+        var app = new Vue({
+            data: {
+                msg: 'hello',
+				rawHtml : "<a href='#'>click me</a>",
+				btn_dis : '',
+				id : 1
+            },
+            el: '#app',
+			filters: {
+				filterA : function(value, arg, arg2) {
+					console.log(value + arg + arg2);
+					return typeof value;
+				}
+			}
+        });
+    </script>
+</body>
+
+</html>
